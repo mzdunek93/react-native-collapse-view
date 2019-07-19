@@ -7,6 +7,7 @@ const propTypes = {
   renderCollapseView: PropTypes.func.isRequired,
   collapse: PropTypes.bool,
   tension: PropTypes.number,
+  onOpen: PropTypes.func
 }
 const defaultProps = {
   collapse: false,
@@ -24,6 +25,8 @@ class CollapseView extends Component {
     };
   }
 
+  ref = React.createRef()
+
   collapse = () => {
     const { startpoint, endpoint, animation, collapse } = this.state;
     let startAnim = collapse? endpoint + startpoint : startpoint;
@@ -40,6 +43,12 @@ class CollapseView extends Component {
         tension: this.props.tension,
       }
     ).start();
+
+    if (!collapse && this.props.onOpen) {
+      this.ref.current && this.ref.current._component.measure((x, y, width, height, pageX, pageY) => {
+        this.props.onOpen(pageY, startpoint + endpoint)
+      })
+    }
   }
 
   startpoint = (layout) => {
@@ -61,7 +70,7 @@ class CollapseView extends Component {
     const height = startpoint !== null && endpoint !== null ? animation : null
 
     return (
-      <Animated.View style={{height, backgroundColor:'transparent', overflow: 'hidden'}}>
+      <Animated.View style={{height, backgroundColor:'transparent', overflow: 'hidden'}} ref={this.ref}>
         <TouchableOpacity activeOpacity={1} onPress={this.collapse} onLayout={this.startpoint}>
           {this.props.renderView(collapse)}
         </TouchableOpacity>
