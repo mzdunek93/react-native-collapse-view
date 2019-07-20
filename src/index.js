@@ -11,7 +11,7 @@ const propTypes = {
 }
 const defaultProps = {
   collapse: false,
-  tension: 10
+  duration: 200
 };
 
 class CollapseView extends Component {
@@ -36,11 +36,11 @@ class CollapseView extends Component {
     })
     
     animation.setValue(startAnim);
-    Animated.spring(
+    Animated.timing(
       this.state.animation,
       {
         toValue: endAnim,
-        tension: this.props.tension,
+        duration: this.props.duration
       }
     ).start();
 
