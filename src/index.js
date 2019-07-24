@@ -42,13 +42,13 @@ class CollapseView extends Component {
         toValue: endAnim,
         duration: this.props.duration
       }
-    ).start();
-
-    if (!collapse && this.props.onOpen) {
-      this.ref.current && this.ref.current._component.measure((x, y, width, height, pageX, pageY) => {
-        this.props.onOpen(pageY, startpoint + endpoint)
-      })
-    }
+    ).start(() => {
+      if (!collapse && this.props.onOpen && this.ref.current) {
+        this.ref.current._component.measure((x, y, width, height, pageX, pageY) => {
+          this.props.onOpen(pageY, height)
+        })
+      }
+    });
   }
 
   startpoint = (layout) => {
