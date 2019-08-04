@@ -44,8 +44,10 @@ class CollapseView extends Component {
       }
     ).start(() => {
       if (!collapse && this.props.onOpen && this.ref.current) {
-        this.ref.current._component.measure((x, y, width, height, pageX, pageY) => {
-          this.props.onOpen(pageY, height)
+        requestAnimationFrame(() => {
+          this.ref.current._component.measure((x, y, width, height, pageX, pageY) => {
+            this.props.onOpen(pageY, height)
+          })
         })
       }
     });
